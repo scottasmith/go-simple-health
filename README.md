@@ -54,7 +54,10 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: cluster-healthz
-  namespace default
+  namespace: default
+  annotations:
+    # Whitelist only internal IP's on subnet 102.168.0.0
+    haproxy.org/whitelist: "192.168.0.0/24"
 spec:
   rules:
     - http:
@@ -63,9 +66,8 @@ spec:
             pathType: ImplementationSpecific
             backend:
               service:
-                name: test-website
+                name: cluster-healthz
                 port:
-                  number: 80
-
+                  number: 8080
 ```
-to return HTTP string
+
